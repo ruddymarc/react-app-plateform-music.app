@@ -1,8 +1,12 @@
 /* eslint-disable linebreak-style */
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 function App() {
+  const PAGES = ['HOME_PAGE', 'SEARCH_PAGE', 'PLAYLIST_PAGE'];
+  const [activePage, setActivePage] = useState(PAGES.at(0));
+  const mainContent = (activePage === PAGES.at(0) && 'Home page content') || (activePage === PAGES.at(1) && 'Search page content') || (activePage === PAGES.at(2) && 'Playlist page content');
+
   return (
     <div className="App">
       <header>
@@ -10,6 +14,7 @@ function App() {
           <button
             type="button"
             className="Link"
+            onClick={() => setActivePage(PAGES.at(0))}
           >
             <h1>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-disc" viewBox="0 0 16 16">
@@ -23,6 +28,7 @@ function App() {
             <button
               type="button"
               className="Link"
+              onClick={() => setActivePage(PAGES.at(0))}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-house-door" viewBox="0 0 16 16">
                 <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146ZM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5Z" />
@@ -32,6 +38,7 @@ function App() {
             <button
               type="button"
               className="Link"
+              onClick={() => setActivePage(PAGES.at(1))}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
@@ -41,6 +48,7 @@ function App() {
             <button
               type="button"
               className="Link"
+              onClick={() => setActivePage(PAGES.at(2))}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-music-note-list" viewBox="0 0 16 16">
                 <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z" />
@@ -95,7 +103,7 @@ function App() {
       </header>
 
       <main>
-        Main content
+        { mainContent }
       </main>
     </div>
   );
