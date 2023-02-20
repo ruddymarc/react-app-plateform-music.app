@@ -1,38 +1,53 @@
-.App {
-  text-align: center;
+h1 {
+  display: inline-flex;
+  align-items: center;
+  gap: .3em;
+}
+.App,
+.Link,
+.Music-status,
+.Player-actions {
+  gap: .5em;
+  display: flex;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+main,
+nav,
+.Player {
   display: flex;
   flex-direction: column;
+}
+
+.App > header {
+  width: 15em;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.Player {
+  text-align: center;
+}
+.Player-actions {
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-evenly;
 }
 
-.App-link {
-  color: #61dafb;
+.Music-status {
+  justify-content: space-between;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Link {
+  align-items: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.Link svg {
+  height: 1.5em;
+  width: auto;
+}
+.Link.play svg {
+  height: 3em;
 }
