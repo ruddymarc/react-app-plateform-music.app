@@ -1,18 +1,35 @@
 /* eslint-disable linebreak-style */
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import Home from './Components/Home';
+import Search from './Components/Search';
+import Playlist from './Components/Playlist';
 
 function App() {
   const PAGES = ['HOME_PAGE', 'SEARCH_PAGE', 'PLAYLIST_PAGE'];
   const [activePage, setActivePage] = useState(PAGES.at(0));
-  const mainContent = (activePage === PAGES.at(0) && 'Home page content') || (activePage === PAGES.at(1) && 'Search page content') || (activePage === PAGES.at(2) && 'Playlist page content');
+  const mainContent = (activePage === PAGES.at(0) && <Home />)
+    || (activePage === PAGES.at(1) && <Search />)
+    || (activePage === PAGES.at(2) && <Playlist />);
+
+  const [playedSong, setPlayedSong] = useState(false);
+  const [cursor, setCursor] = useState(0);
+  const tooglePlay = () => { setPlayedSong(!playedSong); };
+  const incrementCursor = () => { setCursor(Math.min(cursor + 1, 100)); };
+  const decrementCursor = () => { setCursor(Math.max(cursor - 1, 0)); };
+
+  const toTimeString = (seconds) => {
+    const parser = parseInt(seconds, 10); // ensure args is integer
+    const min = Math.floor(((parser / 60) * 100) / 100);
+    const sec = parser % 60;
+    return `${min < 10 ? `0${min}` : min}:${sec < 10 ? `0${sec}` : sec}`;
+  };
 
   return (
     <Wrapper>
       <header>
         <section>
-          <Link onClick={() => { setActivePage(PAGES.at(0)); }}>
+          <Button onClick={() => { setActivePage(PAGES.at(0)); }}>
             <Title>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-disc" viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
@@ -20,21 +37,21 @@ function App() {
               </svg>
               Spotifuz
             </Title>
-          </Link>
+          </Button>
           <nav>
-            <Link onClick={() => { setActivePage(PAGES.at(0)); }}>
+            <Button onClick={() => { setActivePage(PAGES.at(0)); }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-house-door" viewBox="0 0 16 16">
                 <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146ZM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5Z" />
               </svg>
               Home
-            </Link>
-            <Link onClick={() => { setActivePage(PAGES.at(1)); }}>
+            </Button>
+            <Button onClick={() => { setActivePage(PAGES.at(1)); }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
               </svg>
               Search
-            </Link>
-            <Link onClick={() => { setActivePage(PAGES.at(2)); }}>
+            </Button>
+            <Button onClick={() => { setActivePage(PAGES.at(2)); }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-music-note-list" viewBox="0 0 16 16">
                 <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z" />
                 <path fillRule="evenodd" d="M12 3v10h-1V3h1z" />
@@ -42,38 +59,44 @@ function App() {
                 <path fillRule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z" />
               </svg>
               Playlist
-            </Link>
+            </Button>
           </nav>
         </section>
         <Player>
           <img src="https://via.placeholder.com/150" alt="music-img" className="Music-picture" />
           <span className="Music-author">Author</span>
           <MusicStatus>
-            0:00 min
-            <div className="Music-progress-bars">
-              <div className="Music-progress-bar" />
-            </div>
-            ?:?? min
+            { toTimeString(0) }
+            <MusicBars cursor={cursor}>
+              <div cursor={cursor} />
+            </MusicBars>
+            { toTimeString(200) }
           </MusicStatus>
           <PlayerActions>
-            <Link>
+            <Button onClick={decrementCursor}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-rewind" viewBox="0 0 16 16">
                 <path d="M9.196 8 15 4.633v6.734L9.196 8Zm-.792-.696a.802.802 0 0 0 0 1.392l6.363 3.692c.52.302 1.233-.043 1.233-.696V4.308c0-.653-.713-.998-1.233-.696L8.404 7.304Z" />
                 <path d="M1.196 8 7 4.633v6.734L1.196 8Zm-.792-.696a.802.802 0 0 0 0 1.392l6.363 3.692c.52.302 1.233-.043 1.233-.696V4.308c0-.653-.713-.998-1.233-.696L.404 7.304Z" />
               </svg>
-            </Link>
-            <LinkPlay>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-play-circle" viewBox="0 0 16 16">
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z" />
-              </svg>
-            </LinkPlay>
-            <Link>
+            </Button>
+            <ButtonPlay onClick={tooglePlay}>
+              { playedSong ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pause-circle" viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                  <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-play-circle-fill" viewBox="0 0 16 16">
+                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z" />
+                </svg>
+              ) }
+            </ButtonPlay>
+            <Button onClick={incrementCursor}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-fast-forward" viewBox="0 0 16 16">
                 <path d="M6.804 8 1 4.633v6.734L6.804 8Zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C.713 12.69 0 12.345 0 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692Z" />
                 <path d="M14.804 8 9 4.633v6.734L14.804 8Zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C8.713 12.69 8 12.345 8 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692Z" />
               </svg>
-            </Link>
+            </Button>
           </PlayerActions>
         </Player>
       </header>
@@ -111,7 +134,7 @@ const Title = styled.h1`
   gap: .3em;
 `;
 
-const Link = styled.button`
+const Button = styled.button`
   gap: .5em;
   display: flex;
   flex-wrap: wrap;
@@ -125,7 +148,7 @@ const Link = styled.button`
   }
 `;
 
-const LinkPlay = styled(Link)`
+const ButtonPlay = styled(Button)`
   &> svg {
     height: 3em;
     color: green;
@@ -149,6 +172,18 @@ const MusicStatus = styled.div`
   gap: .5em;
   display: flex;
   justify-content: space-between;
+`;
+
+const MusicBars = styled.div`
+  flex: auto;
+  border: thin solid blue;
+  border-radius: 1em;
+  overflow: hidden;
+  &> div {
+    height: 100%;
+    width: ${(props) => props.cursor}%;
+    background: blue;
+  }
 `;
 
 export default App;
