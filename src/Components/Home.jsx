@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { albums, toTimeString } from '../functions';
 import Navbar from './Navbar';
+import AlbumDetail from './AlbumDetail';
 import Album from './Album';
 
 function Home() {
@@ -10,6 +11,22 @@ function Home() {
   const [activeAlbum, setActiveAlbum] = React.useState(null);
   const onSelectAlbum = (album) => {
     setActiveAlbum(album);
+    setShowAlbum(true);
+  };
+  const onCloseAlbum = () => {
+    setActiveAlbum(null);
+    setShowAlbum(false);
+  };
+  const [showAlbumDetail, setShowAlbumDetail] = React.useState(false);
+  const [activeAlbumDetail, setActiveAlbumDetail] = React.useState(null);
+  const onSelectAlbumDetail = (music) => {
+    setActiveAlbumDetail(music);
+    setShowAlbumDetail(true);
+    setShowAlbum(false);
+  };
+  const onCloseAlbumDetail = () => {
+    setActiveAlbumDetail(null);
+    setShowAlbumDetail(false);
     setShowAlbum(true);
   };
 
@@ -24,20 +41,28 @@ function Home() {
     </Card>
   ));
 
+  const navContent = showAlbum
+    ? showAlbum && <Button onClick={onCloseAlbum}>Back to home</Button>
+    : showAlbumDetail && <Button onClick={onCloseAlbumDetail}>Back to album</Button>;
+
+  const albumContent = showAlbum
+    ? showAlbum && <Album album={activeAlbum} onShowDetail={onSelectAlbumDetail} />
+    : showAlbumDetail && <AlbumDetail music={activeAlbumDetail} />;
+
+  const pageContent = albumContent || (
+  <>
+    <h2>Welcome</h2>
+    <section>
+      <h3>Prefered albums</h3>
+      { preferedAlbums }
+    </section>
+  </>
+  );
+
   return (
     <>
-      <Navbar>
-        { showAlbum && <Button onClick={() => setShowAlbum(false)}>Back to home</Button> }
-      </Navbar>
-      { showAlbum ? <Album album={activeAlbum} /> : (
-        <>
-          <h2>Welcome</h2>
-          <section>
-            <h3>Prefered albums</h3>
-            { preferedAlbums }
-          </section>
-        </>
-      ) }
+      <Navbar>{ navContent }</Navbar>
+      { pageContent }
     </>
   );
 }
