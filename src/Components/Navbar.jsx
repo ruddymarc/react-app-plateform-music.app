@@ -7,6 +7,7 @@ function Navbar({ children }) {
   return (
     <NavbarStyled>
       { children }
+      <span />
       <button type="button">teset</button>
     </NavbarStyled>
   );
@@ -18,6 +19,7 @@ const NavbarStyled = styled.nav`
   justify-content: space-between;
   font-size: 1.3em;
   padding: .5em .8em;
+  background: grey;
   button {
     font-size: 1em;
     border-radius: .3em;

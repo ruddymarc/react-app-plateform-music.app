@@ -1,6 +1,7 @@
 /* eslint-disable linebreak-style */
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { toTimeString } from './functions';
 import Home from './Components/Home';
 import Search from './Components/Search';
 import Playlist from './Components/Playlist';
@@ -17,13 +18,6 @@ function App() {
   const tooglePlay = () => { setPlayedSong(!playedSong); };
   const incrementCursor = () => { setCursor(Math.min(cursor + 1, 100)); };
   const decrementCursor = () => { setCursor(Math.max(cursor - 1, 0)); };
-
-  const toTimeString = (seconds) => {
-    const parser = parseInt(seconds, 10); // ensure args is integer
-    const min = Math.floor(((parser / 60) * 100) / 100);
-    const sec = parser % 60;
-    return `${min < 10 ? `0${min}` : min}:${sec < 10 ? `0${sec}` : sec}`;
-  };
 
   return (
     <Wrapper>
@@ -124,7 +118,25 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    overflow-x: scroll;
+    ._info,
+    ._actions,
+    ._heading {
+      display: flex;
+      gap: .8em;
+      box-sizing: border-box;
+    }
+    ._heading {
+      align-items: end;
+    }
+    ._name {
+      text-transform: uppercase;
+      font-size: xx-large;
+    }
+    ._info img {
+      height: 1.5em;
+      width: auto;
+      border-radius: 50%;
+    }
   }
 `;
 
