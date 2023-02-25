@@ -1,69 +1,37 @@
 /* eslint-disable linebreak-style */
-import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { addDepth, backTo } from '../store/homepage.reducer';
 import { albums, toTimeString } from '../functions';
 import Navbar from './Navbar';
-import AlbumDetail from './AlbumDetail';
 import Album from './Album';
 
 function Home() {
-  const title = (name, year, time = null) => `${name} (${year}) ${time || ''}`;
+  const dispatch = useDispatch();
   // first screen - homepage
-  const [depths, setDepths] = useState([
-    {
-      actions: undefined,
-      content: (
-        <>
-          <h2>Welcome</h2>
-          <section>
-            <h3>Prefered albums</h3>
-            <span>Loading ...</span>
-          </section>
-        </>
-      ),
-    },
-  ]);
-  const { length } = depths;
-  const { actions, content } = depths.at(length - 1);
+  const homepage = useSelector((state) => state.homepage);
+  const { length } = homepage;
+  const { actions, content } = homepage.at(length - 1);
 
   useEffect(() => {
+    const title = (name, year, time = null) => `${name} (${year}) ${time || ''}`;
     // Prevent rewiting depths
-    if (depths.length !== 1) {
+    if (homepage.length !== 1) {
       return;
     }
-    // prepare screen - album-detail
-    const onSelectAlbumDetail = (music) => {
-      setDepths([...depths, {
-        actions: (
-          <Button
-            onClick={() => {
-              setDepths([...depths.slice(0, length)]);
-            }}
-          >
-            Back to album
-          </Button>
-        ),
-        content: (
-          <AlbumDetail music={music} />
-        ),
-      }]);
-    };
     // prepare screen - album
     const onSelectAlbum = (album) => {
-      setDepths([...depths, {
+      dispatch(addDepth({
         actions: (
-          <Button
-            onClick={() => {
-              setDepths([...depths.slice(0, length)]);
-            }}
-          >
+          <Button onClick={() => { dispatch(backTo()); }}>
             Back to home
           </Button>
         ),
         content: (
-          <Album album={album} onShowDetail={onSelectAlbumDetail} />
+          <Album album={album} />
         ),
-      }]);
+      }));
     };
     // list prefered albums
     const preferedAlbums = albums.map((album) => (
@@ -75,22 +43,19 @@ function Home() {
         <span>{ Object.values(album.author.names).join(' ') }</span>
       </Card>
     ));
-    // update first screen
-    setDepths([...depths, {
-      actions: depths.actions,
+    dispatch(addDepth({
+      actions: homepage.actions,
       content: (
         <>
           <h2>Welcome</h2>
           <section>
             <h3>Prefered albums</h3>
-            { preferedAlbums }
+            <span>{ preferedAlbums || <span>Loading ...</span> }</span>
           </section>
         </>
       ),
-    }]);
-  }, [depths, length]);
-
-  console.log(depths, length);
+    }));
+  }, [dispatch, homepage, length]);
   return (
     <>
       <Navbar>{ actions }</Navbar>
