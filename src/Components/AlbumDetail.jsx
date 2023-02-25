@@ -1,5 +1,5 @@
 /* eslint-disable linebreak-style */
-/* eslint-disable react/prop-types */
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import { toTimeString } from '../functions';
@@ -18,7 +18,7 @@ function AlbumDetail({ music }) {
           <div className="_name">{ name }</div>
           <div className="_info">
             <img src={author.picture} alt="author-img" />
-            { [author.name, yearProduct, toTimeString(length)].join(' - ') }
+            { [Object.values(author.names).join(' '), yearProduct, toTimeString(length)].join(' - ') }
           </div>
         </div>
       </header>
@@ -52,18 +52,21 @@ function AlbumDetail({ music }) {
   );
 }
 
-AlbumDetail.defaultProps = {
-  AlbumDetail: {
-    name: '',
-    picture: '',
-    author: {
-      picture: '',
-      name: '',
-    },
-    yearProduct: '',
-    length: 0,
-    lirycs: '',
-  },
+AlbumDetail.propTypes = {
+  music: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    picture: PropTypes.string.isRequired,
+    author: PropTypes.shape({
+      picture: PropTypes.string.isRequired,
+      names: PropTypes.exact({
+        first: PropTypes.string,
+        last: PropTypes.string,
+      }).isRequired,
+    }).isRequired,
+    yearProduct: PropTypes.string.isRequired,
+    length: PropTypes.number.isRequired,
+    lirycs: PropTypes.string,
+  }).isRequired,
 };
 
 const Button = styled.button`

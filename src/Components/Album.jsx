@@ -1,5 +1,6 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable react/prop-types */
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import { toTimeString } from '../functions';
@@ -77,17 +78,32 @@ function Album({ album, onShowDetail }) {
   );
 }
 
-Album.defaultProps = {
-  album: {
-    id: null,
-    type: '',
-    name: '',
-    picture: '',
-    author: { picture: '', name: '' },
-    yearProduct: '',
-    recordingTime: 0,
-    titles: [],
-  },
+const albumTypes = ['Single', 'Album', 'Compilation', 'Ep'];
+
+Album.propTypes = {
+  album: PropTypes.shape({
+    type: PropTypes.oneOf(albumTypes),
+    picture: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    author: PropTypes.shape({
+      picture: PropTypes.string.isRequired,
+      names: PropTypes.exact({
+        first: PropTypes.string,
+        last: PropTypes.string,
+      }).isRequired,
+    }).isRequired,
+    yearProduct: PropTypes.string.isRequired,
+    recordingTime: PropTypes.number.isRequired,
+    titles: PropTypes.arrayOf(
+      PropTypes.exact({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        length: PropTypes.number,
+        lirycs: PropTypes.string,
+      }),
+    ),
+  }).isRequired,
+  onShowDetail: PropTypes.func.isRequired,
 };
 
 const Button = styled.button`
