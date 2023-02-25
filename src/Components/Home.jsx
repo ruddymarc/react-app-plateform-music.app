@@ -1,5 +1,5 @@
 /* eslint-disable linebreak-style */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { albums, toTimeString } from '../functions';
 import Navbar from './Navbar';
@@ -7,62 +7,94 @@ import AlbumDetail from './AlbumDetail';
 import Album from './Album';
 
 function Home() {
-  const [showAlbum, setShowAlbum] = React.useState(false);
-  const [activeAlbum, setActiveAlbum] = React.useState(null);
-  const onSelectAlbum = (album) => {
-    setActiveAlbum(album);
-    setShowAlbum(true);
-  };
-  const onCloseAlbum = () => {
-    setActiveAlbum(null);
-    setShowAlbum(false);
-  };
-  const [showAlbumDetail, setShowAlbumDetail] = React.useState(false);
-  const [activeAlbumDetail, setActiveAlbumDetail] = React.useState(null);
-  const onSelectAlbumDetail = (music) => {
-    setActiveAlbumDetail(music);
-    setShowAlbumDetail(true);
-    setShowAlbum(false);
-  };
-  const onCloseAlbumDetail = () => {
-    setActiveAlbumDetail(null);
-    setShowAlbumDetail(false);
-    setShowAlbum(true);
-  };
-
   const title = (name, year, time = null) => `${name} (${year}) ${time || ''}`;
-  const preferedAlbums = albums.map((album) => (
-    <Card key={album.id} onClick={() => { onSelectAlbum(album); }}>
-      <img src={album.picture} alt="album-img" />
-      <div className="_caption">
-        { title(album.name, album.yearProduct, toTimeString(album.recordingTime)) }
-      </div>
-      <span>{ album.author.name }</span>
-    </Card>
-  ));
+  // first screen - homepage
+  const [depths, setDepths] = useState([
+    {
+      actions: undefined,
+      content: (
+        <>
+          <h2>Welcome</h2>
+          <section>
+            <h3>Prefered albums</h3>
+            <span>Loading ...</span>
+          </section>
+        </>
+      ),
+    },
+  ]);
+  const { length } = depths;
+  const { actions, content } = depths.at(length - 1);
 
-  const navContent = showAlbum
-    ? showAlbum && <Button onClick={onCloseAlbum}>Back to home</Button>
-    : showAlbumDetail && <Button onClick={onCloseAlbumDetail}>Back to album</Button>;
+  useEffect(() => {
+    // Prevent rewiting depths
+    if (depths.length !== 1) {
+      return;
+    }
+    // prepare screen - album-detail
+    const onSelectAlbumDetail = (music) => {
+      setDepths([...depths, {
+        actions: (
+          <Button
+            onClick={() => {
+              setDepths([...depths.slice(0, length)]);
+            }}
+          >
+            Back to album
+          </Button>
+        ),
+        content: (
+          <AlbumDetail music={music} />
+        ),
+      }]);
+    };
+    // prepare screen - album
+    const onSelectAlbum = (album) => {
+      setDepths([...depths, {
+        actions: (
+          <Button
+            onClick={() => {
+              setDepths([...depths.slice(0, length)]);
+            }}
+          >
+            Back to home
+          </Button>
+        ),
+        content: (
+          <Album album={album} onShowDetail={onSelectAlbumDetail} />
+        ),
+      }]);
+    };
+    // list prefered albums
+    const preferedAlbums = albums.map((album) => (
+      <Card key={album.id} onClick={() => { onSelectAlbum(album); }}>
+        <img src={album.picture} alt="album-img" />
+        <div className="_caption">
+          { title(album.name, album.yearProduct, toTimeString(album.recordingTime)) }
+        </div>
+        <span>{ Object.values(album.author.names).join(' ') }</span>
+      </Card>
+    ));
+    // update first screen
+    setDepths([...depths, {
+      actions: depths.actions,
+      content: (
+        <>
+          <h2>Welcome</h2>
+          <section>
+            <h3>Prefered albums</h3>
+            { preferedAlbums }
+          </section>
+        </>
+      ),
+    }]);
+  }, [depths, length]);
 
-  const albumContent = showAlbum
-    ? showAlbum && <Album album={activeAlbum} onShowDetail={onSelectAlbumDetail} />
-    : showAlbumDetail && <AlbumDetail music={activeAlbumDetail} />;
-
-  const pageContent = albumContent || (
-  <>
-    <h2>Welcome</h2>
-    <section>
-      <h3>Prefered albums</h3>
-      { preferedAlbums }
-    </section>
-  </>
-  );
-
+  console.log(depths, length);
   return (
     <>
-      <Navbar>{ navContent }</Navbar>
-      { pageContent }
+      <Navbar>{ actions }</Navbar>
+      { content }
     </>
   );
 }
