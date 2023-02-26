@@ -2,19 +2,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
+import { formatTime, userName } from '../functions';
 
 function AlbumDetail({ music }) {
   const {
     picture, name, author, yearProduct, length, lirycs,
   } = music;
-
-  const userName = (user) => Object.values(user.names).join(' ');
-  const formatTime = (seconds) => {
-    const parser = parseInt(seconds, 10); // ensure args is integer
-    const min = Math.floor(((parser / 60) * 100) / 100);
-    const sec = parser % 60;
-    return `${min < 10 ? `0${min}` : min}:${sec < 10 ? `0${sec}` : sec}`;
-  };
 
   return (
     <>

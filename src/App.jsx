@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { toTimeString } from './functions';
+import { formatTime } from './functions';
 import Home from './Components/Home';
 import Search from './Components/Search';
 import Playlist from './Components/Playlist';
@@ -60,11 +60,11 @@ function App() {
           <img src="https://via.placeholder.com/150" alt="music-img" className="Music-picture" />
           <span className="Music-author">Author</span>
           <MusicStatus>
-            { toTimeString(0) }
+            { formatTime(0) }
             <MusicBars cursor={cursor}>
               <div cursor={cursor} />
             </MusicBars>
-            { toTimeString(200) }
+            { formatTime(200) }
           </MusicStatus>
           <PlayerActions>
             <Button onClick={decrementCursor}>

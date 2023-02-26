@@ -3,20 +3,12 @@ import { useDispatch } from 'react-redux';
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { formatTime, formatTitle, userName } from '../functions';
 import { addDepth, backTo } from '../store/homepage.reducer';
 import Album from './Album';
 
 function Albums({ title, albums }) {
   const dispatch = useDispatch();
-
-  const formatTitle = (name, year, time = null) => `${name} (${year}) ${time || ''}`;
-  const userName = (user) => Object.values(user.names).join(' ');
-  const formatTime = (seconds) => {
-    const parser = parseInt(seconds, 10); // ensure args is integer
-    const min = Math.floor(((parser / 60) * 100) / 100);
-    const sec = parser % 60;
-    return `${min < 10 ? `0${min}` : min}:${sec < 10 ? `0${sec}` : sec}`;
-  };
 
   // prepare screen - album
   const onSelectAlbum = (album) => {

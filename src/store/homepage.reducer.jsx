@@ -7,19 +7,17 @@ const actions = {
   backTo: createAction('BACK_TO'),
 };
 
-const initialState = {
-  homepage: [
-    {
-      actions: undefined,
-      content: (
-        <>
-          <h2>Welcome</h2>
-          <span>Loading ...</span>
-        </>
-      ),
-    },
-  ],
-};
+const initialState = [
+  {
+    actions: undefined,
+    content: (
+      <>
+        <h2>Welcome</h2>
+        <span>Loading ...</span>
+      </>
+    ),
+  },
+];
 
 export const homepageSlice = createSlice({
   name: 'homepage',
@@ -27,14 +25,12 @@ export const homepageSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(actions.addDepth, (state, action) => ({
-        ...state,
-        homepage: [...state.homepage, action.payload],
-      }))
-      .addCase(actions.backTo, (state) => ({
-        ...state,
-        homepage: [...state.homepage.slice(0, -1)],
-      }))
+      .addCase(actions.addDepth, (state, action) => [
+        ...state, action.payload,
+      ])
+      .addCase(actions.backTo, (state) => [
+        ...state.slice(0, -1),
+      ])
       .addDefaultCase((state) => state);
   },
 });

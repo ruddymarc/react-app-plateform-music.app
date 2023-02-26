@@ -2,13 +2,13 @@
 import { useSelector, useDispatch } from 'react-redux';
 import React, { useEffect } from 'react';
 import { addDepth } from '../store/homepage.reducer';
-import { albums } from '../functions';
 import Navbar from './Navbar';
 import Albums from './Albums';
 
 function Home() {
   const dispatch = useDispatch();
   // first screen - homepage
+  const albums = useSelector((state) => state.albums);
   const homepage = useSelector((state) => state.homepage);
   const { length } = homepage;
   const { actions, content } = homepage.at(length - 1);
@@ -29,7 +29,7 @@ function Home() {
         </>
       ),
     }));
-  }, [dispatch, homepage, length]);
+  }, [dispatch, albums, homepage, length]);
 
   return (
     <>

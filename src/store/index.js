@@ -1,6 +1,6 @@
 /* eslint-disable linebreak-style */
 import { configureStore } from '@reduxjs/toolkit';
-import reducer from './homepage.reducer';
+import reducer from './root.reducer';
 
 const store = configureStore({
   reducer,
