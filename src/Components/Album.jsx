@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import { addDepth, backTo } from '../store/homepage.reducer';
-import { toTimeString } from '../functions';
 import AlbumDetail from './AlbumDetail';
 
 function Album({ album }) {
@@ -13,7 +12,13 @@ function Album({ album }) {
   const {
     type, picture, name, author, yearProduct, recordingTime, titles,
   } = album;
-  const authorName = Object.values(author.names).join(' ');
+  const userName = (user) => Object.values(user.names).join(' ');
+  const formatTime = (seconds) => {
+    const parser = parseInt(seconds, 10); // ensure args is integer
+    const min = Math.floor(((parser / 60) * 100) / 100);
+    const sec = parser % 60;
+    return `${min < 10 ? `0${min}` : min}:${sec < 10 ? `0${sec}` : sec}`;
+  };
 
   const onSelectTitle = (title) => {
     dispatch(addDepth({
@@ -35,7 +40,7 @@ function Album({ album }) {
       <Button onClick={() => { onSelectTitle(title); }}>
         <span>{ title.id }</span>
         <div>{ title.name }</div>
-        <span>{ toTimeString(title.length) }</span>
+        <span>{ formatTime(title.length) }</span>
       </Button>
     </li>
   ));
@@ -49,7 +54,7 @@ function Album({ album }) {
           <div className="_name">{ name }</div>
           <div className="_info">
             <img src={author.picture} alt="author-img" />
-            { [authorName, yearProduct, titles.length, toTimeString(recordingTime)].join(' - ') }
+            { [userName(author), yearProduct, titles.length, formatTime(recordingTime)].join(' - ') }
           </div>
         </div>
       </header>
