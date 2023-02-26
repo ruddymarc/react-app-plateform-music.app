@@ -21,7 +21,7 @@ function App() {
 
   return (
     <Wrapper>
-      <header>
+      <Header>
         <section>
           <Button onClick={() => { setActivePage(PAGES.at(0)); }}>
             <Title>
@@ -32,7 +32,7 @@ function App() {
               Spotifuz
             </Title>
           </Button>
-          <nav>
+          <Nav>
             <Button onClick={() => { setActivePage(PAGES.at(0)); }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-house-door" viewBox="0 0 16 16">
                 <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146ZM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5Z" />
@@ -54,11 +54,11 @@ function App() {
               </svg>
               Playlist
             </Button>
-          </nav>
+          </Nav>
         </section>
         <Player>
-          <img src="https://via.placeholder.com/150" alt="music-img" className="Music-picture" />
-          <span className="Music-author">Author</span>
+          <img src="https://via.placeholder.com/150" alt="music-img" />
+          <span>Author</span>
           <MusicStatus>
             { formatTime(0) }
             <MusicBars cursor={cursor}>
@@ -93,11 +93,14 @@ function App() {
             </Button>
           </PlayerActions>
         </Player>
-      </header>
+      </Header>
 
-      <main>
+      <Main>
         { mainContent }
-      </main>
+        <Footer>
+          This app is made with 💕 by Ruddy
+        </Footer>
+      </Main>
     </Wrapper>
   );
 }
@@ -106,44 +109,60 @@ const Wrapper = styled.div`
   gap: .5em;
   display: flex;
   width: 100vw;
-  &> header {
-    height: 100vh;
-    width: 16em;
+`;
+
+const Header = styled.header`
+  height: 100vh;
+  width: 16em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const Main = styled.main`
+  gap: .5em;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  ._info,
+  ._actions,
+  ._heading {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    gap: .8em;
+    box-sizing: border-box;
+    align-items: end;
   }
-  &> main {
-    flex: auto;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    ._info,
-    ._actions,
-    ._heading {
-      display: flex;
-      gap: .8em;
-      box-sizing: border-box;
-    }
-    ._heading {
-      align-items: end;
-    }
-    ._name {
-      text-transform: uppercase;
-      font-size: xx-large;
-    }
-    ._info img {
-      height: 1.5em;
-      width: auto;
-      border-radius: 50%;
-    }
+  ._name {
+    text-transform: uppercase;
+    font-size: xx-large;
   }
+  ._info img {
+    height: 1.5em;
+    width: auto;
+    border-radius: 50%;
+  }
+`;
+
+const Nav = styled.nav`
+  gap: .5em;
+  display: flex;
+  flex-direction: column;
+`;
+
+const Footer = styled.footer`
+  margin: 2em;
+  text-align: center;
+  font-weith
 `;
 
 const Title = styled.h1`
   display: inline-flex;
   align-items: center;
   gap: .3em;
+  &> svg {
+    height: 1.5em;
+    width: auto;
+  }
 `;
 
 const Button = styled.button`
@@ -171,6 +190,7 @@ const Player = styled.div`
   display: flex;
   flex-direction: column;
   text-align: center;
+  margin-bottom: 2em;
 `;
 
 const PlayerActions = styled.div`

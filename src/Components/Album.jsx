@@ -31,11 +31,11 @@ function Album({ album }) {
   };
   const albumTitles = titles.map((title) => (
     <li key={`title-${title.id}`}>
-      <Button onClick={() => { onSelectTitle(title); }}>
+      <ButtonStyled onClick={() => { onSelectTitle(title); }}>
         <span>{ title.id }</span>
         <div>{ title.name }</div>
         <span>{ formatTime(title.length) }</span>
-      </Button>
+      </ButtonStyled>
     </li>
   ));
 
@@ -90,7 +90,6 @@ function Album({ album }) {
 }
 
 const albumTypes = ['Single', 'Album', 'Compilation', 'Ep'];
-
 Album.propTypes = {
   album: PropTypes.shape({
     type: PropTypes.oneOf(albumTypes),
@@ -123,6 +122,19 @@ const Button = styled.button`
   font-size: 1em;
 `;
 
+const ButtonStyled = styled(Button)`
+  display: flex;
+  flex: auto;
+  gap: .5em;
+  border-radius: 0;
+  // Animate
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  &:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+`;
+
 const ButtonIcon = styled(Button)`
   background: none;
   &> svg {
@@ -151,16 +163,9 @@ const AlbumTitles = styled.ul`
     font-weight: 700;
     border-bottom: thin solid grey;
   }
-  div,
-  button {
+  div {
     display: flex;
     flex: auto;
-    // Animate
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    &:hover {
-      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    }
   }
 `;
 
